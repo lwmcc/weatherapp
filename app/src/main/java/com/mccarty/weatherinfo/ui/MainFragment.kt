@@ -1,50 +1,71 @@
 package com.mccarty.weatherinfo.ui
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.viewModels
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mccarty.weatherinfo.R
+import com.mccarty.weatherinfo.adapters.WeatherAdapter
+import com.mccarty.weatherinfo.api.WeatherResponse
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.*
 
+@AndroidEntryPoint
 class MainFragment : Fragment(R.layout.main_fragment) {
 
     private val mainModel: MainViewModel by activityViewModels()
 
+    private lateinit var adapter: WeatherAdapter
+    private lateinit var list: MutableList<WeatherResponse>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        list = mutableListOf()
+
+        mainModel.weatherResponseArrayList.observe(requireActivity(), Observer { weatherArray ->
+            weatherArray?.let {
+                list.clear()
+                list.addAll(weatherArray)
+                notifyDataChange()
+            }
+        })
+
+        mainModel.userCity.observe(requireActivity(), Observer { city ->
+            mainModel.getWeatherData(city)
+        })
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        val root = inflater.inflate(R.layout.main_fragment, container, false)
+        val recyclerView: RecyclerView = root.findViewById(R.id.recycler_weather)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter = WeatherAdapter(requireActivity(), list)
+        recyclerView.adapter = adapter
+
+        return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         button_city.setOnClickListener {
-            mainModel.callNavToDetails(true)
+            mainModel.setUserCity(edit_text_city.text.toString().trim())
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+    private fun notifyDataChange() {
+        adapter.notifyDataSetChanged()
     }
 }
