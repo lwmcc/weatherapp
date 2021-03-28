@@ -8,8 +8,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mccarty.weatherinfo.R
 import com.mccarty.weatherinfo.api.WeatherResponse
+import com.mccarty.weatherinfo.ui.MainViewModel
 
-class WeatherAdapter(private val context: Context, private val weatherArray: MutableList<WeatherResponse>):
+class WeatherAdapter(private val context: Context, private val mainModel: MainViewModel,
+                     private val weatherArray: MutableList<WeatherResponse>):
+
     RecyclerView.Adapter<WeatherAdapter.ViewHolder>()  {
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -24,8 +27,12 @@ class WeatherAdapter(private val context: Context, private val weatherArray: Mut
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        viewHolder.temp.text = context.resources.getString(R.string.temp) + weatherArray[position].main.temp.toString()
-        viewHolder.feelsLike.text = context.resources.getString(R.string.feels_like) + weatherArray[position].main.feels_like.toString()
+        viewHolder.temp.text = context.resources.getString(R.string.temp) + " " + weatherArray[position].main.temp.toString()
+        viewHolder.feelsLike.text = context.resources.getString(R.string.feels_like) + " " + weatherArray[position].main.feels_like.toString()
+
+        viewHolder.temp.setOnClickListener {
+            mainModel.setWeatherResponseObject(weatherArray[0]) // Set object so we can get it's data from ViewModel in Details fragment
+        }
     }
 
     override fun getItemCount() = weatherArray.size

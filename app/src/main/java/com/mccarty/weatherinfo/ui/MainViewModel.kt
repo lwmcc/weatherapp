@@ -17,9 +17,14 @@ class MainViewModel @ViewModelInject constructor(private val weatherService: Wea
 
     var navigateToWeatherDetails = MutableLiveData<Boolean>()
     var weatherResponseArrayList = MutableLiveData<ArrayList<WeatherResponse>>()
+    var weatherResponseObject = MutableLiveData<WeatherResponse>()
 
     fun callNavToDetails(nav: Boolean) {
         navigateToWeatherDetails.value = nav
+    }
+
+    fun setWeatherResponseObject(response: WeatherResponse) {
+        weatherResponseObject.value = response
     }
 
     fun setUserCity(city: String) {

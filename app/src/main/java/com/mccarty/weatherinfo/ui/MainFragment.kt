@@ -51,7 +51,7 @@ class MainFragment : Fragment(R.layout.main_fragment) {
         val recyclerView: RecyclerView = root.findViewById(R.id.recycler_weather)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter = WeatherAdapter(requireActivity(), list)
+        adapter = WeatherAdapter(requireActivity(), mainModel, list)
         recyclerView.adapter = adapter
 
         return root

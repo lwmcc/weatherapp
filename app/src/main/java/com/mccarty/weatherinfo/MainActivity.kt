@@ -31,6 +31,10 @@ class MainActivity : AppCompatActivity() {
         mainModel.navigateToWeatherDetails.observe(this, Observer {
             navController.navigate(R.id.detail_fragment)
         })
+
+        mainModel.weatherResponseObject.observe(this, Observer {
+            navController.navigate(R.id.detail_fragment)
+        })
     }
 
     override fun onSupportNavigateUp(): Boolean {
