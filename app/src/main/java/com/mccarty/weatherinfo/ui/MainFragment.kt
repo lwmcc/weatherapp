@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mccarty.weatherinfo.R
 import com.mccarty.weatherinfo.adapters.WeatherAdapter
 import com.mccarty.weatherinfo.api.WeatherResponse
+import com.mccarty.weatherinfo.networkutils.utils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.*
 
@@ -59,9 +61,12 @@ class MainFragment : Fragment(R.layout.main_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         button_city.setOnClickListener {
-            mainModel.setUserCity(edit_text_city.text.toString().trim())
+            if(utils.networkIsAvailable(requireContext())) {
+                mainModel.setUserCity(edit_text_city.text.toString().trim())
+            } else {
+                Toast.makeText(requireContext(), getString(R.string.no_internet), Toast.LENGTH_LONG).show()
+            }
         }
     }
 

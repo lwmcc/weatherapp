@@ -1,5 +1,7 @@
 package com.mccarty.weatherinfo.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -54,4 +56,5 @@ class MainViewModel @ViewModelInject constructor(private val weatherService: Wea
             }
         }
     }
+
 }
